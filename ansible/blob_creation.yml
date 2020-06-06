@@ -1,0 +1,37 @@
+---
+- name: Playbook to PUT blob content
+  hosts: localhost
+  gather_facts: no
+  connection: local
+  tasks:
+
+  - set_fact:
+       storage_account_name: marciotestblob
+       blob_container_name: test
+       blob_name: myfile.txt
+       blob_content: Hello World Blob content
+
+  - name: Generate Shared Access Signature
+    shell: python  scripts/generate_key.py {{ storage_account_name }} {{ blob_container_name }} {{ blob_name }} {{ blob_content|length }}
+    register: generate_key
+    delegate_to: localhost
+
+  - set_fact:
+       sas_token: "{{ generate_key.stdout.split(';')[0] }}"
+       request_time: "{{ generate_key.stdout.split(';')[1] }}"
+
+  - name: Azure Blob REST API creation
+    uri: 
+      url: "https://{{ storage_account_name }}.blob.core.windows.net/{{ blob_container_name }}/{{ blob_name }}"
+      headers: 
+        x-ms-blob-type: BlockBlob
+        x-ms-date: "{{ request_time }}"
+        x-ms-version: "2015-02-21"
+        Content-Type: "text/plain; charset=UTF-8"
+        Content-Length: "{{ blob_content|length }}"
+        Authorization: "SharedKey {{ storage_account_name }}:{{ sas_token }}"
+      method: PUT
+      body: "{{ blob_content }}"
+      status_code: 201
+      validate_certs: false
+    delegate_to: localhost
