@@ -10,9 +10,9 @@ Authorization="SharedKey <storage account name>:<signature>"
 ```
 ### SAS 
 The SAS (<signature>) is a unique hash-based key which is created for EVERY REST Api execution. Which means we need a key created on the fly before each execution. 
-### HEaders
+### Headers
 We need to set values in the Header like doc (https://docs.microsoft.com/en-us/rest/api/storageservices/put-blob) suggests:
-````
+```
 Request Headers:  
 x-ms-version: 2015-02-21  
 x-ms-date: <date>  
