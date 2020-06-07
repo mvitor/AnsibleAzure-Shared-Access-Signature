@@ -9,7 +9,7 @@ The SAS (Shared Access Signature) is created using the Azure Storage Key. We nee
 ```
 Authorization="SharedKey <storage account name>:<signature>"  
 ```
-The SAS (<signature>) is a unique hash-based key which is created for EVERY REST Api execution. Which means we need a key created on the fly during each execution. 
+The SAS (<signature>) is a unique hash-based key which is created for EVERY REST Api URI you access. Which means we need a key created on the fly during each execution. 
 
 ## REST API Headers
 
@@ -125,6 +125,6 @@ Below the Ansible Code which makes the Put Blob operation. Same Header values ar
       validate_certs: false
     delegate_to: localhost
 ```
-In above Ansible code, Blob file details like file name and content are hardcoded but you can can create dynamic inputs by your requirement.
+In above Ansible code Blob file details like file name and content are hardcoded but you can can create dynamic inputs by your requirement.
 
-Gitlab repository for this post can be found [here].
+Gitlab repository with both scripts can be found [here](https://github.com/mvitor/azure/tree/master/ansible).
