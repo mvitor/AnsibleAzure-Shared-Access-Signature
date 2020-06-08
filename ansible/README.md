@@ -1,19 +1,39 @@
-# Azure Blob creation a sing Ansible with Azure Storage REST API
-Recently during a client consulting for a client in Ansible Tower we have a requirement to create an Azure blob from the client side, a very restrict envinroment where dependencies are not allowed at this time. We couldn't use Ansible modules like [azure_rm_storageblob](https://docs.ansible.com/ansible/latest/modules/azure_rm_storageblob_module.html) or Azure utils like [azcopy](https://docs.microsoft.com/en-us/azure/storage/common/storage-ref-azcopy-copy) so only option was usage of the [Azure REST API Blob creation](https://docs.microsoft.com/en-us/rest/api/storageservices/put-blob). 
+---
+title: How to create a Azure Blob REST API and Ansible
+date: 2020-06-06 23:21:34
+tags:
+  - ansible
+  - azure
+  - blob
+  - put 
+  - shared access signature
+  - python 
+  - CanonicalizedHeaders 
+  - CanonicalizedResource 
+  - rest api
+  - creation
+  - create 
+
+categories:
+  - Automation
+---
+
+## Azure Blob creation using Ansible with Azure Storage REST API
+Recently during a consulting for a client in Ansible Tower we have a requirement to create an Azure blob from the client side, a very restrict envinroment where dependencies are not allowed at this time. We could not use Ansible modules like [azure_rm_storageblob](https://docs.ansible.com/ansible/latest/modules/azure_rm_storageblob_module.html) or Azure utils like [azcopy](https://docs.microsoft.com/en-us/azure/storage/common/storage-ref-azcopy-copy) so only option was usage of the [Azure REST API Blob creation](https://docs.microsoft.com/en-us/rest/api/storageservices/put-blob). 
 
 ## Shared Access Signature x Azure Storage REST API
 
 That REST API has some specifics because it requires a SAS (Shared Access Signature) to make the authorization.
 
-The SAS (Shared Access Signature) is created using the Azure Storage Key. We need to set a Authorization header like the below with Storage Account name and Signature but I need to mention that the Signature must be recreated for each request made, that's not fixed value you can set.   
+SAS (Shared Access Signature) is created using the Azure Storage Key. We need to set a Authorization header like the below with Storage Account name and Signature but I need to mention that the Signature must be recreated for each request made. It's not fixed value we can set.   
 ```
 Authorization="SharedKey <storage account name>:<signature>"  
 ```
-The SAS (<signature>) is a unique hash-based key which is created for EVERY REST Api URI you access. Which means we need a key created on the fly during each execution. 
+Signature token is a unique hash-based key which is created for every REST Api URI you access. Which means we need a key created on the fly during each URI call. 
 
 ## REST API Headers
 
-We need to set values in the Header like [doc](https://docs.microsoft.com/en-us/rest/api/storageservices/put-blob) suggests:
+We need to set values in the API Header call like [doc here](https://docs.microsoft.com/en-us/rest/api/storageservices/put-blob) suggests:
 ```
 Request Headers:  
 x-ms-version: 2015-02-21  
@@ -23,12 +43,14 @@ x-ms-blob-type: BlockBlob
 Authorization: SharedKey myaccount:YhuFJjN4fAR8/AmBrqBz7MG2uFinQ4rkh4dscbj598g=  
 Content-Length: 11 
 ```
-Content-lenght and x-ms-date values vary per request and both values must exactly the same between SAS creation and the REST Api Blob creation and we're ensuring it's happening.
-Plus we have to correctly set the CanonicalizedHeaders and CanonicalizedResource. Here what Wikipedia says about it:
-```
+Content-lenght and x-ms-date values vary per request and both values must be xactly the same between SAS creation and  REST Api Blob creation. Plus we have to correctly define the CanonicalizedHeaders and CanonicalizedResource, using below values that will work fine for defined Azure API version (2015-02-21).
+
+Here what Wikipedia says about CanonicalizedHeaders and CanonicalizedResource:
 In computer science, canonicalization (sometimes standardization or normalization) is a process for converting data that has more than one possible representation into a "standard", "normal", or canonical form. In normal-speak, this means to take the list of items (such as headers in the case of Canonicalized Headers) and standardize them into a required format. Basically, Microsoft decided on a format and you need to match it.
-```
-We use Python to generate the Shared Access Signature and return the key to the Ansible before REST API call. That returns the SAS and Request time (time must be the same in the REST API call). Code is below:
+
+We use Python to generate the Shared Access Signature and return the key to the Ansible before REST API call. That returns the SAS and Request time (time must be the same in the REST API call).
+
+Code is below:
 ```
 import requests
 import datetime
@@ -80,8 +102,8 @@ signed_string = base64.b64encode(hmac.new(base64.b64decode(storage_account_key),
 
 print (signed_string+";"+request_time)
 ```
-CanonicalizedHeaders and CanonicalizedResource values must be correctly set with proper new lines characters. In 'string_params' values must be the same of the Blob Creation Api call.  As well as all header params must be appended to 'string_to_sign'. Anything out of the expected is going to fail the REST Api authentication. 
-The same SAS procedure/script can be leveraged for any Azure Storage API like Tables and Queues. I spent a couple hours on this so I hope that helps someone else.
+CanonicalizedHeaders and CanonicalizedResource values must be correctly set with proper new lines characters. In <em>string_params</em> values must be the same of the Blob Creation Api call.  As well as all header params must be appended to <em>string_to_sign</em>. Anything out of the expected is going to fail the REST Api authentication. 
+The same SAS procedure/script can be leveraged for any Azure Storage API like Tables and Queues. I spent a couple hours on this so I hope to save this time from anyone else.
 
 ## Ansible playbook to PUT Blob Rest API
 
