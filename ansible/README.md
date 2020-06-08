@@ -1,22 +1,3 @@
----
-title: How to create a Azure Blob REST API and Ansible
-date: 2020-06-06 23:21:34
-tags:
-  - ansible
-  - azure
-  - blob
-  - put 
-  - shared access signature
-  - python 
-  - CanonicalizedHeaders 
-  - CanonicalizedResource 
-  - rest api
-  - creation
-  - create 
-
-categories:
-  - Automation
----
 
 ## Azure Blob creation using Ansible with Azure Storage REST API
 Recently during a consulting for a client in Ansible Tower we have a requirement to create an Azure blob from the client side, a very restrict envinroment where dependencies are not allowed at this time. We could not use Ansible modules like [azure_rm_storageblob](https://docs.ansible.com/ansible/latest/modules/azure_rm_storageblob_module.html) or Azure utils like [azcopy](https://docs.microsoft.com/en-us/azure/storage/common/storage-ref-azcopy-copy) so only option was usage of the [Azure REST API Blob creation](https://docs.microsoft.com/en-us/rest/api/storageservices/put-blob). 
@@ -150,3 +131,23 @@ Below the Ansible Code which makes the Put Blob operation. Same Header values ar
 In above Ansible code Blob file details like file name and content are hardcoded but you can can create dynamic inputs by your requirement.
 
 Gitlab repository with both scripts can be found [here](https://github.com/mvitor/azure/tree/master/ansible).
+
+---
+title: How to create a Azure Blob REST API and Ansible
+date: 2020-06-06 23:21:34
+tags:
+  - ansible
+  - azure
+  - blob
+  - put 
+  - shared access signature
+  - python 
+  - CanonicalizedHeaders 
+  - CanonicalizedResource 
+  - rest api
+  - creation
+  - create 
+
+categories:
+  - Automation
+---
