@@ -7,7 +7,7 @@ import sys
 # Azure Rest Api Version
 api_version = '2015-02-21'
 request_time = datetime.datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT')
-storage_account_key = 'TNn8GaTfTUcr20n16BPHvxfo5wLyaxzFXh+kxezc7w+GE5ZtmhhE5nlLGNfK1/Vd/Evnw8iErx/VTEh0It7KPQ=='
+storage_account_key = ''
 storage_account_name = sys.argv[1]
 container_name = sys.argv[2]
 blob_name = sys.argv[3]
