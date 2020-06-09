@@ -89,11 +89,6 @@ CanonicalizedHeaders and CanonicalizedResource values must be correctly set with
 <?xml version="1.0" encoding="utf-8"?><Error><Code>AuthenticationFailed</Code><Message>Server failed to authenticate the request. Make sure the value of Authorization header is formed correctly including the signature.
 RequestId:cbf12c65-c01e-00fc-1069-3a41a7000000
 Time:2020-06-04T12:11:03.4295368Z</Message><AuthenticationErrorDetail>The MAC signature found in the HTTP request 'c9n6EKq9p6skUs17qGv/bW0yGRGjMzMrP7bgDwjRABg=' is not the same as any computed signature. Server used following string to sign: 'PUT
-
-
-11
-
-text/plain; charset=UTF-8
 ```
 
 
