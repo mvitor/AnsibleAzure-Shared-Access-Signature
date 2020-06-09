@@ -1,5 +1,4 @@
-
-## Azure Blob creation using Ansible with Azure Storage REST API
+## Azure Blob creation using Ansible on Azure Storage REST API
 Recently during a consulting for a client in Ansible Tower we have a requirement to create an Azure blob from the client side, a very restrict envinroment where dependencies are not allowed at this time. We could not use Ansible modules like [azure_rm_storageblob](https://docs.ansible.com/ansible/latest/modules/azure_rm_storageblob_module.html) or Azure utils like [azcopy](https://docs.microsoft.com/en-us/azure/storage/common/storage-ref-azcopy-copy) so only option was usage of the [Azure REST API Blob creation](https://docs.microsoft.com/en-us/rest/api/storageservices/put-blob). 
 
 ## Shared Access Signature x Azure Storage REST API
