@@ -83,8 +83,31 @@ signed_string = base64.b64encode(hmac.new(base64.b64decode(storage_account_key),
 
 print (signed_string+";"+request_time)
 ```
-CanonicalizedHeaders and CanonicalizedResource values must be correctly set with proper new lines characters. In <em>string_params</em> values must be the same of the Blob Creation Api call.  As well as all header params must be appended to <em>string_to_sign</em>. Anything out of the expected is going to fail the REST Api authentication. 
-The same SAS procedure/script can be leveraged for any Azure Storage API like Tables and Queues. I spent a couple hours on this so I hope to save this time from anyone else.
+CanonicalizedHeaders and CanonicalizedResource values must be correctly set with proper new lines characters. In <em>string_params</em> values must be the same of the Blob Creation Api call.  As well as all header params must be appended to <em>string_to_sign</em>. Anything out of the expected is going to fail the REST Api authentication with return error similar to the  below:
+
+```
+<?xml version="1.0" encoding="utf-8"?><Error><Code>AuthenticationFailed</Code><Message>Server failed to authenticate the request. Make sure the value of Authorization header is formed correctly including the signature.
+RequestId:cbf12c65-c01e-00fc-1069-3a41a7000000
+Time:2020-06-04T12:11:03.4295368Z</Message><AuthenticationErrorDetail>The MAC signature found in the HTTP request 'c9n6EKq9p6skUs17qGv/bW0yGRGjMzMrP7bgDwjRABg=' is not the same as any computed signature. Server used following string to sign: 'PUT
+
+
+11
+
+text/plain; charset=UTF-8
+```
+
+
+
+
+
+x-ms-blob-type:BlockBlob
+x-ms-date:Thu, 04 Jun 2020 12:11:02 GMT
+x-ms-version:2015-02-21
+/<mystorageaccount>/test/fname'.</AuthenticationErrorDetail></Error>
+x
+
+
+The same SAS procedure/script can be leveraged for any Azure Storage API like Tables and Queues. I spent a couple hours on this so I hope to save this time from anyone else which might be facing errors like 'The MAC signature found in the HTTP request is not the same as any computed signature'.
 
 ## Ansible playbook to PUT Blob Rest API
 
